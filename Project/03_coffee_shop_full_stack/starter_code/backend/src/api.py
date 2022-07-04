@@ -28,7 +28,13 @@ db_drop_and_create_all()
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks')
+def get_drinks():
+    drinks = Drink.query.all()
+    return jsonify({
+        "success": True,
+        "drinks": [drink.short()for drink in drinks]
+    })
 
 
 '''
@@ -39,6 +45,14 @@ db_drop_and_create_all()
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks-detail')
+@requires_auth('get:drinks-detail')
+def get_drinks_detail():
+    drinks = Drink.query.all()
+    return jsonify({
+        "success": True,
+        "drinks": [drink.long()for drink in drinks]
+    })
 
 
 '''
@@ -50,6 +64,17 @@ db_drop_and_create_all()
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
+@app.route('/post:drinks', methods=['POST'])  
+@requires_auth('post:drinks')
+def drinks_add():
+    drinks = request.get_json()
+    if('drink' not in drinks):
+        abort(422)
+    return jsonify({
+        "success": True,
+        "drinks": [drink.long()for drink in drinks]
+    }) 
+
 
 
 '''
