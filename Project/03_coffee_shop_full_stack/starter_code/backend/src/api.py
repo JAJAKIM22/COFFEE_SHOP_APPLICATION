@@ -28,6 +28,15 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks', methods=['GET'])
+def get_drinks():
+    drinks = drinks.short()
+    if(drinks not in drinks):
+        abort(404)
+    return jsonify({
+            'success': True,
+            'drinks':(drinks)
+        })
 
 
 '''
